@@ -9,10 +9,13 @@ on:
       - ".github/workflows/sync-cfnew.yml"
       - "wrangler.toml"
   schedule:
-    - cron: "0 1 * * *"
+    - cron: "0 */6 * * *"
 
 permissions:
   contents: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
   sync:
@@ -22,15 +25,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
 
-      - name: Download upstream source file
+      - name: Download cfnew source
         shell: bash
         run: |
           curl -fL "https://raw.githubusercontent.com/byJoey/cfnew/main/%E5%B0%91%E5%B9%B4%E4%BD%A0%E7%9B%B8%E4%BF%A1%E5%85%89%E5%90%97" -o "少年你相信光吗"
           test -s "少年你相信光吗"
 
-      - name: Commit synced source
+      - name: Commit updated source
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
           branch: main
           commit_message: "chore: sync cfnew source"
-          file_pattern: "少年你相信光吗"
